@@ -1,6 +1,5 @@
 discord_webhook: ""
-authorized-owners: []
-
+authorized_owners: []
 
 colors:
   pending: 15588927        # #EDDE3F
