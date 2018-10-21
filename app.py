@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 
 from flask import Flask, request, abort
 import requests
@@ -14,17 +13,14 @@ PAYLOAD_COMMIT_URL = "https://github.com/{repository[owner_name]}/{repository[na
 with open("config.yaml") as file:
     config = yaml.load(file)
 
-DISCORD_WEBHOOK = config["discord-webhook"]
+DISCORD_WEBHOOK = config["discord_webhook"]
 AUTHORIZED_OWNERS = config["authorized_owners"]
 COLORS = config["colors"]
 
 
 app = Flask(__name__)
-# Is this even needed?
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "idk")
 
-
-@app.route("/webhook", methods=["POST"])
+@app.route("/notify", methods=["POST"])
 def webhook():
     data = request.form["payload"]
     data = json.loads(data)
