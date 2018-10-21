@@ -62,7 +62,7 @@ def webhook():
                 "inline": True,
             },{
                 "name": "Branch",
-                "value": "`{branch}`".format(**data),
+                "value": "[`{branch}`](https://github.com/{repository[owner_name]}/{repository[name]}/tree/{branch})".format(**data),
                 "inline": True,
             }
             ],
