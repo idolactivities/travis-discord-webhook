@@ -7,8 +7,7 @@ import requests
 import yaml
 
 
-PAYLOAD_TITLE = "[{repository[name]}:{branch}] Build #{number} {result_text}"
-PAYLOAD_DESCRIPTION = "[`{commit:.7}`]({url}) {message}"
+PAYLOAD_TITLE = "Build #{number} {status_message} - {repository[owner_name]}/{repository[name]}"
 PAYLOAD_COMMIT_URL = "https://github.com/{repository[owner_name]}/{repository[name]}/commit/{commit}"
 
 
@@ -40,23 +39,37 @@ def webhook():
 
     time = "started_at" if result == "pending" else "finished_at"
 
-    # PHP example just uses array() but that doesn't make sense...
-    # Idk, should ask someone who PHPs
+    if result in ['passed', 'fixed']:
+        avatar = "https://travis-ci.com/images/logos/TravisCI-Mascot-blue.png"
+    elif result in ['pending', 'canceled']:
+        avatar = "https://travis-ci.com/images/logos/TravisCI-Mascot-grey.png"
+    else:
+        avatar = "https://travis-ci.com/images/logos/TravisCI-Mascot-red.png"
+
     payload = {
         "username": "Travis CI",
-        "avatar_url": "https://i.imgur.com/kOfUGNS.png",
+        "avatar_url": "https://travis-ci.com/images/logos/TravisCI-Mascot-1.png",
         "embeds": [{
             "color": color,
             "author": {
-                "name": data["author_name"]
-                # TODO: See if author username can be found in
-                # Travis' payload, and then
-                # `"icon_url" : "https://github.com/USERNAME.png`
-                # as described in https://stackoverflow.com/a/36380674
+                "name": PAYLOAD_TITLE.format(**data),
+                "url": data["build_url"],
+                "icon_url": avatar
             },
-            "title": PAYLOAD_TITLE.format(result_text=result.capitalize(), **data),
-            "url": data["build_url"],
-            "description": PAYLOAD_DESCRIPTION.format(url=PAYLOAD_COMMIT_URL.format(**data), **data),
+            "title": data["message"].splitlines()[0],
+            "url": "https://github.com/{repository[owner_name]}/{repository[name]}/pull/{pull_request_number}".format(**data) if data["pull_request"] else "",
+            "description": "\n".join(data["message"].splitlines()[1:]),
+            "fields": [
+            {
+                "name": "Commit",
+                "value": "[`{commit:.7}`]({compare_url})".format(**data),
+                "inline": True,
+            },{
+                "name": "Branch",
+                "value": "`{branch}`".format(**data),
+                "inline": True,
+            }
+            ],
             "timestamp": data[time]
         }]
     }
