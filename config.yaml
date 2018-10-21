@@ -1,4 +1,5 @@
-discord-webhook:
+discord-webhook: ""
+authorized-owners: []
 
 
 colors:

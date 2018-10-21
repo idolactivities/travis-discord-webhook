@@ -50,9 +50,9 @@ def webhook():
                 # `"icon_url" : "https://github.com/USERNAME.png`
                 # as described in https://stackoverflow.com/a/36380674
             },
-            "title": PAYLOAD_TITLE.format(**data, result_text=result.capitalize()),
+            "title": PAYLOAD_TITLE.format(result_text=result.capitalize(), **data),
             "url": data["build_url"],
-            "description": PAYLOAD_DESCRIPTION.format(**data, url=PAYLOAD_COMMIT_URL.format(**data)),
+            "description": PAYLOAD_DESCRIPTION.format(url=PAYLOAD_COMMIT_URL.format(**data), **data),
             "timestamp": data[time]
         }]
     }
