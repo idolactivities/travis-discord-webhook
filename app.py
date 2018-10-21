@@ -2,7 +2,7 @@ import json
 import logging
 import os
 
-from flask import Flask, request
+from flask import Flask, request, abort
 import requests
 import yaml
 
@@ -16,6 +16,7 @@ with open("config.yaml") as file:
     config = yaml.load(file)
 
 DISCORD_WEBHOOK = config["discord-webhook"]
+AUTHORIZED_OWNERS = config["authorized_owners"]
 COLORS = config["colors"]
 
 
@@ -28,6 +29,9 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "idk")
 def webhook():
     data = request.form["payload"]
     data = json.loads(data)
+
+    if data["repository"]["owner_name"] not in AUTHORIZED_OWNERS:
+        abort(401)
 
     # Force lower because yaml uses lower case
     result = data["status_message"].lower()
