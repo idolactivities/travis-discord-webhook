@@ -36,7 +36,7 @@ make sure you remove your webhook url first.**
 * Type `heroku scale web=1`
 * Check it's fine with a `heroku ps`
 
-The webhook to add to `.travis.yml` will be https://whatever_you_want_it_to_be_called.herokuapp.com/webhook
+The webhook to add to `.travis.yml` will be https://whatever_you_want_it_to_be_called.herokuapp.com/notify
 (obviously with the name you gave it before)
 
 ### Adding the webhook to Travis
@@ -47,7 +47,7 @@ The webhook to add to `.travis.yml` will be https://whatever_you_want_it_to_be_c
 
 ```yaml
 notifications:
-  webhooks: https://whatever_you_want_it_to_be_called.herokuapp.com/webhook
+  webhooks: https://whatever_you_want_it_to_be_called.herokuapp.com/notify
 ```
 
   For more options, see
@@ -78,4 +78,3 @@ Doesn't work? Create an issue and I'll see if I can help.
 Any and all contributions welcome. I want to make modifying and deploying
 this as easy as possible to do, so easy that a five-year-old who has just heard
 of Bash or CMD would be able to deploy this with ease.
-
